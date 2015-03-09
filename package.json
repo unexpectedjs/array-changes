@@ -1,0 +1,32 @@
+{
+  "name": "array-changes",
+  "version": "1.0.0",
+  "description": "Array diffing",
+  "main": "./lib/arrayChanges.js",
+  "scripts": {
+    "test": "mocha",
+    "prepublish": "(echo '/*!' && <LICENSE sed -e's/^/ * /' | sed -e's/\\s+$//' && echo ' */' && browserify -p bundle-collapser/plugin -e lib/arrayChanges -s weknowhow.arrayChanges) > array-changes.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/unexpectedjs/array-changes"
+  },
+  "keywords": [
+    "diff"
+  ],
+  "author": "Sune Simonsen <sss@one.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/unexpectedjs/array-changes/issues"
+  },
+  "homepage": "https://github.com/unexpectedjs/array-changes",
+  "dependencies": {
+    "arraydiff": "0.1.1",
+    "browserify": "9.0.3",
+    "bundle-collapser": "1.1.4"
+  },
+  "devDependencies": {
+    "mocha": "2.2.1",
+    "unexpected": "6.1.0"
+  }
+}
