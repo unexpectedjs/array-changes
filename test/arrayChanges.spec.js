@@ -7,6 +7,12 @@ function toArguments() {
 }
 
 describe('array-changes', function () {
+    it('returns an empty change-list when the two arrays are both empty', function () {
+        expect(arrayChanges([], [], function (a, b) {
+            return a === b;
+        }), 'to equal', []);
+    });
+
     it('returns a change-list with no changes if the arrays are the same', function () {
         expect(arrayChanges([0, 1, 2, 3], [0, 1, 2, 3], function (a, b) {
             return a === b;
@@ -29,6 +35,14 @@ describe('array-changes', function () {
         ]);
     });
 
+    it('should indicate item removals at the end', function () {
+        expect(arrayChanges([0], [], function (a, b) {
+            return a === b;
+        }), 'to equal', [
+            { type: 'remove', value: 0, last: true }
+        ]);
+    });
+
     it('should indicate missing items', function () {
         expect(arrayChanges([0, 1, 3], [0, 1, 2, 3], function (a, b) {
             return a === b;
@@ -37,6 +51,14 @@ describe('array-changes', function () {
             { type: 'equal', value: 1, expected: 1 },
             { type: 'insert', value: 2 },
             { type: 'equal', value: 3, last: true, expected: 3 }
+        ]);
+    });
+
+    it('should indicate a missing item at the end', function () {
+        expect(arrayChanges([], [0], function (a, b) {
+            return a === b;
+        }), 'to equal', [
+            { type: 'insert', value: 0, last: true }
         ]);
     });
 
