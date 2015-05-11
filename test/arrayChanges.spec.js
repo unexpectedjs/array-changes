@@ -1,6 +1,10 @@
 var arrayChanges = require('../lib/arrayChanges');
 var expect = require('unexpected');
 
+function toArguments() {
+    return arguments;
+}
+
 describe('array-changes', function () {
     it('returns a change-list with no changes if the arrays are the same', function () {
         expect(arrayChanges([0, 1, 2, 3], [0, 1, 2, 3], function (a, b) {
@@ -107,6 +111,17 @@ describe('array-changes', function () {
                 last: true,
                 expected: { type: 'dog', name: 'Sam' }
             }
+        ]);
+    });
+
+    it('supports diffing array-like objects', function () {
+        expect(arrayChanges(toArguments(1, 2, 5), toArguments(3, 4), function (a, b) {
+            return a === b;
+        }), 'to equal', [
+            { type: 'insert', value: toArguments( 3, 4 ) },
+            { type: 'remove', value: 1 },
+            { type: 'similar', value: 2, expected: 4 },
+            { type: 'similar', value: 5, last: true, expected: undefined }
         ]);
     });
 });
