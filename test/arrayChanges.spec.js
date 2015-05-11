@@ -1,3 +1,4 @@
+/*global describe, it*/
 var arrayChanges = require('../lib/arrayChanges');
 var expect = require('unexpected');
 
