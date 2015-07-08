@@ -27,7 +27,7 @@
     "arraydiff": "0.1.1"
   },
   "devDependencies": {
-    "browserify": "9.0.3",,
+    "browserify": "9.0.3",
     "bundle-collapser": "1.1.4",
     "coveralls": "2.11.2",
     "istanbul": "0.3.14",
