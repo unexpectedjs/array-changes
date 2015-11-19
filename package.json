@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/unexpectedjs/array-changes",
   "dependencies": {
-    "arraydiff": "0.1.1"
+    "arraydiff": "papandreou/arraydiff#feature/provideItemIndicesToEqualFn"
   },
   "devDependencies": {
     "browserify": "10.2.4",
