@@ -166,16 +166,16 @@ describe('array-changes', function () {
             return a === b;
         }).named('equal');
         arrayChanges(a, b, equal);
-        expect(equal, 'to have calls satisfying', [
-            { args: [ 1, 4, 0, 0 ] },
-            { args: [ 1, 5, 0, 1 ] },
-            { args: [ 2, 4, 1, 0 ] },
-            { args: [ 2, 5, 1, 1 ] },
-            { args: [ 1, 4, 0, 0 ] },
-            { args: [ 2, 5, 1, 1 ] },
-            { args: [ 1, 4, 0, 0 ] },
-            { args: [ 2, 5, 1, 1 ] }
-        ]);
+        expect(equal, 'to have calls satisfying', function () {
+            equal(1, 4, 0, 0);
+            equal(1, 5, 0, 1);
+            equal(2, 4, 1, 0);
+            equal(2, 5, 1, 1);
+            equal(1, 4, 0, 0);
+            equal(2, 5, 1, 1);
+            equal(1, 4, 0, 0);
+            equal(2, 5, 1, 1);
+        });
     });
 
     it('passes the item indices to the similar function', function () {
@@ -188,13 +188,13 @@ describe('array-changes', function () {
             return a === b;
         }).named('similar');
         arrayChanges(a, b, equal, similar);
-        expect(similar, 'to have calls satisfying', [
-            { args: [ 1, 4, 0, 0 ] },
-            { args: [ 1, 5, 0, 1 ] },
-            { args: [ 2, 4, 1, 0 ] },
-            { args: [ 2, 5, 1, 1 ] },
-            { args: [ 1, 4, 0, 0 ] },
-            { args: [ 2, 5, 1, 1 ] }
-        ]);
+        expect(similar, 'to have calls satisfying', function () {
+            similar(1, 4, 0, 0);
+            similar(1, 5, 0, 1);
+            similar(2, 4, 1, 0);
+            similar(2, 5, 1, 1);
+            similar(1, 4, 0, 0);
+            similar(2, 5, 1, 1);
+        });
     });
 });
