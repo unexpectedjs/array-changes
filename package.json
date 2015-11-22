@@ -34,7 +34,7 @@
     "jshint": "2.7.0",
     "mocha": "2.2.5",
     "sinon": "1.17.2",
-    "unexpected": "10.2.0",
-    "unexpected-sinon": "8.0.0"
+    "unexpected": "10.3.1",
+    "unexpected-sinon": "9.0.0"
   }
 }
