@@ -78,6 +78,8 @@ describe('array-changes', function () {
     it('shows items that are not equal but should be compared against each other as similar', function () {
         expect(arrayChanges([0, 1, 2, 3], [0, 2, 1, 3], function (a, b) {
             return a === b;
+        }, function (a, b) {
+            return true;
         }), 'to equal', [
             { type: 'equal', value: 0, expected: 0, actualIndex: 0, expectedIndex: 0 },
             { type: 'similar', value: 1, expected: 2, actualIndex: 1, expectedIndex: 1 },
@@ -152,6 +154,8 @@ describe('array-changes', function () {
     it('supports diffing array-like objects', function () {
         expect(arrayChanges(toArguments(1, 2, 5), toArguments(1, 3, 4), function (a, b) {
             return a === b;
+        }, function (a, b) {
+            return true;
         }), 'to equal', [
             { type: 'equal', value: 1, expected: 1, actualIndex: 0, expectedIndex: 0 },
             { type: 'similar', value: 2, expected: 3, actualIndex: 1, expectedIndex: 1 },
@@ -195,6 +199,21 @@ describe('array-changes', function () {
             similar(2, 5, 1, 1);
             similar(1, 4, 0, 0);
             similar(2, 5, 1, 1);
+            similar(1, 4, 0, 0);
+            similar(2, 5, 1, 1);
         });
+    });
+
+    it('should not report items as similar when the similar function returns false', function () {
+        expect(arrayChanges([1, 2, 3], [1, 2, 'foo'], function (a, b) {
+            return a === b;
+        }, function (a, b){
+            return false;
+        }), 'to equal', [
+            { type: 'equal', value: 1, expected: 1, actualIndex: 0, expectedIndex: 0 },
+            { type: 'equal', value: 2, expected: 2, actualIndex: 1, expectedIndex: 1 },
+            { type: 'remove', value: 3, actualIndex: 2 },
+            { type: 'insert', value: 'foo', expectedIndex: 2, last: true }
+        ]);
     });
 });
