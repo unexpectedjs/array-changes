@@ -223,6 +223,24 @@ describe('array-changes', function () {
         ]);
     });
 
+    it('should support an array of specific non-numerical keys to diff', function () {
+        var a = [1];
+        a.foo = 123;
+        a.bar = 789;
+
+        var b = [1];
+        a.foo = 456;
+        a.bar = false;
+        expect(arrayChanges(a, b, function (a, b) {
+            return a === b;
+        }, function (a, b) {
+            return a === b;
+        }, [ 'foo' ]), 'to equal', [
+            { type: 'equal', value: 1, expected: 1, actualIndex: 0, expectedIndex: 0 },
+            { type: 'remove', actualIndex: 'foo', value: 456, last: true }
+        ]);
+    });
+
     if (typeof Symbol !== 'undefined') {
         it('should diff arrays that have Symbol property names', function () {
             var aSymbol = Symbol('a');
