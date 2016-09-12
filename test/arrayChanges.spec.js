@@ -1,13 +1,23 @@
 /*global describe, it, Symbol*/
 var arrayChanges = require('../lib/arrayChanges');
-var expect = require('unexpected').clone().use(require('unexpected-sinon'));
+var expect = require('unexpected').clone()
+    .use(require('unexpected-sinon'))
+    .use(require('unexpected-check'));
 var sinon = require('sinon');
+
+var generators = require('chance-generators')
 
 function toArguments() {
     return arguments;
 }
 
 describe('array-changes', function () {
+    var g
+
+    beforeEach(function () {
+        g = generators(42)
+    })
+
     it('returns an empty change-list when the two arrays are both empty', function () {
         expect(arrayChanges([], [], function (a, b) {
             return a === b;
@@ -262,4 +272,37 @@ describe('array-changes', function () {
             ]);
         });
     }
+
+    function executePlan(changes) {
+        var result = [];
+
+        changes.forEach(function (item) {
+            switch (item.type) {
+            case 'moveTarget':
+            case 'insert':
+                result.push(item.value);
+                break;
+            case 'equal':
+            case 'similar':
+                if (typeof item.expected === 'number') {
+                    result.push(item.expected);
+                }
+
+                break;
+            }
+        });
+
+        return result;
+    }
+
+    it('produces a valid plan', () => {
+        var arrays = g.array(g.natural({ max: 10 }), g.natural({ max: 10 }));
+        expect(function (actual, expected) {
+            var result = arrayChanges(actual, expected, function (a, b) {
+                return a === b;
+            });
+
+            expect([result], 'when passed as parameters to', executePlan, 'to equal', expected);
+        }, 'to be valid for all', arrays, arrays);
+    })
 });

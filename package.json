@@ -29,6 +29,7 @@
   "devDependencies": {
     "browserify": "13.0.0",
     "bundle-collapser": "1.2.1",
+    "chance-generators": "1.18.0",
     "coveralls": "2.11.6",
     "eslint": "2.7.0",
     "eslint-config-onelint": "1.0.2",
@@ -36,6 +37,7 @@
     "mocha": "2.3.4",
     "sinon": "1.17.2",
     "unexpected": "10.7.0",
+    "unexpected-check": "1.11.0",
     "unexpected-sinon": "10.0.0"
   }
 }
