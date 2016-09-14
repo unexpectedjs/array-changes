@@ -11,6 +11,38 @@ function toArguments() {
     return arguments;
 }
 
+function executeDiff(changes) {
+    var result = [];
+
+    changes.forEach(function (item) {
+        switch (item.type) {
+        case 'moveTarget':
+        case 'insert':
+            result.push(item.value);
+            break;
+        case 'equal':
+        case 'similar':
+            if (typeof item.expected === 'number') {
+                result.push(item.expected);
+            }
+
+            break;
+        }
+    });
+
+    return result;
+}
+
+expect.addAssertion('<array> when diffed with <array> <assertion>', function (expect, actual, expected) {
+    expect.errorMode = 'nested'
+    return expect.shift(arrayChanges(actual, expected));
+});
+
+expect.addAssertion('<array> when executing the diff <assertion>', function (expect, diff) {
+    expect.errorMode = 'nested'
+    return expect.shift(executeDiff(diff))
+})
+
 describe('array-changes', function () {
     var g
 
@@ -273,36 +305,17 @@ describe('array-changes', function () {
         });
     }
 
-    function executePlan(changes) {
-        var result = [];
-
-        changes.forEach(function (item) {
-            switch (item.type) {
-            case 'moveTarget':
-            case 'insert':
-                result.push(item.value);
-                break;
-            case 'equal':
-            case 'similar':
-                if (typeof item.expected === 'number') {
-                    result.push(item.expected);
-                }
-
-                break;
-            }
-        });
-
-        return result;
-    }
-
     it('produces a valid plan', () => {
         var arrays = g.array(g.natural({ max: 10 }), g.natural({ max: 10 }));
         expect(function (actual, expected) {
-            var result = arrayChanges(actual, expected, function (a, b) {
-                return a === b;
-            });
-
-            expect([result], 'when passed as parameters to', executePlan, 'to equal', expected);
+            expect(
+                actual,
+                'when diffed with',
+                expected,
+                'when executing the diff',
+                'to equal',
+                expected
+            )
         }, 'to be valid for all', arrays, arrays);
     })
 });
