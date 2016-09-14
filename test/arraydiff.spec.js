@@ -40,6 +40,7 @@ describe('arraydiff', function () {
     }
 
     it('produces a valid plan', function () {
+        this.timeout(20000);
         var arrays = g.array(g.natural({ max: 10 }), g.natural({ max: 10 }));
         expect(function (actual, expected) {
             var diff = arrayDiff(actual, expected, function (a, b) {
