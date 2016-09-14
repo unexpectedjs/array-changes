@@ -5,7 +5,7 @@ var expect = require('unexpected').clone()
     .use(require('unexpected-check'));
 var sinon = require('sinon');
 
-var generators = require('chance-generators')
+var generators = require('chance-generators');
 
 function toArguments() {
     return arguments;
@@ -34,21 +34,21 @@ function executeDiff(changes) {
 }
 
 expect.addAssertion('<array> when diffed with <array> <assertion>', function (expect, actual, expected) {
-    expect.errorMode = 'nested'
+    expect.errorMode = 'nested';
     return expect.shift(arrayChanges(actual, expected));
 });
 
 expect.addAssertion('<array> when executing the diff <assertion>', function (expect, diff) {
-    expect.errorMode = 'nested'
-    return expect.shift(executeDiff(diff))
-})
+    expect.errorMode = 'nested';
+    return expect.shift(executeDiff(diff));
+});
 
 describe('array-changes', function () {
-    var g
+    var g;
 
     beforeEach(function () {
-        g = generators(42)
-    })
+        g = generators(42);
+    });
 
     it('returns an empty change-list when the two arrays are both empty', function () {
         expect(arrayChanges([], [], function (a, b) {
@@ -305,7 +305,7 @@ describe('array-changes', function () {
         });
     }
 
-    it('produces a valid plan', () => {
+    it('produces a valid plan', function () {
         var arrays = g.array(g.natural({ max: 10 }), g.natural({ max: 10 }));
         expect(function (actual, expected) {
             expect(
@@ -315,7 +315,7 @@ describe('array-changes', function () {
                 'when executing the diff',
                 'to equal',
                 expected
-            )
+            );
         }, 'to be valid for all', arrays, arrays);
-    })
+    });
 });

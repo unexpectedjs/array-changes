@@ -1,14 +1,14 @@
 var expect = require('unexpected').clone()
     .use(require('unexpected-check'));
-var arrayDiff = require('arraydiff-papandreou')
-var generators = require('chance-generators')
+var arrayDiff = require('arraydiff-papandreou');
+var generators = require('chance-generators');
 
-describe('arraydiff', () => {
-    var g
+describe('arraydiff', function () {
+    var g;
 
     beforeEach(function () {
-        g = generators(42)
-    })
+        g = generators(42);
+    });
 
     function insert(array, index, values) {
         array.splice.apply(array, [index, 0].concat(values));
@@ -39,7 +39,7 @@ describe('arraydiff', () => {
         return out;
     }
 
-    it('produces a valid plan', () => {
+    it('produces a valid plan', function () {
         var arrays = g.array(g.natural({ max: 10 }), g.natural({ max: 10 }));
         expect(function (actual, expected) {
             var diff = arrayDiff(actual, expected, function (a, b) {
@@ -54,5 +54,5 @@ describe('arraydiff', () => {
                 expected
             );
         }, 'to be valid for all', arrays, arrays);
-    })
-})
+    });
+});
