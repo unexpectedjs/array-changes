@@ -105,15 +105,15 @@ describe('array-changes', function () {
         ]);
     });
 
-    it('should treat moved items as removed and inserted', function () {
+    it('should indicate moved items with two items', function () {
         expect(arrayChanges([1, 2, 3, 0], [0, 1, 2, 3], function (a, b) {
             return a === b;
         }), 'to equal', [
-            { type: 'insert', value: 0, last: false, actualIndex: 3 },
-            { type: 'equal', value: 1, expected: 1, actualIndex: 0, expectedIndex: 1 },
-            { type: 'equal', value: 2, expected: 2, actualIndex: 1, expectedIndex: 2 },
-            { type: 'equal', value: 3, expected: 3, actualIndex: 2, expectedIndex: 3 },
-            { type: 'remove', value: 0, last: true, actualIndex: 3 }
+            { type: 'moveTarget', value: 0, actualIndex: 3, last: false },
+            { type: 'equal', value: 1, actualIndex: 0, expected: 1, expectedIndex: 1 },
+            { type: 'equal', value: 2, actualIndex: 1, expected: 2, expectedIndex: 2 },
+            { type: 'equal', value: 3, actualIndex: 2, expected: 3, expectedIndex: 3 },
+            { type: 'moveSource', value: 0, actualIndex: 3, last: true }
         ]);
     });
 
@@ -121,10 +121,11 @@ describe('array-changes', function () {
         expect(arrayChanges([0, 1, 2, 3], [0, 2, 1, 3], function (a, b) {
             return a === b;
         }), 'to equal', [
-            { type: 'equal', value: 0, expected: 0, actualIndex: 0, expectedIndex: 0 },
-            { type: 'similar', value: 1, expected: 2, actualIndex: 1, expectedIndex: 1 },
-            { type: 'similar', value: 2, expected: 1, actualIndex: 2, expectedIndex: 2 },
-            { type: 'equal', value: 3, expected: 3, actualIndex: 3, expectedIndex: 3, last: true }
+            { type: 'equal', value: 0, actualIndex: 0, expected: 0, expectedIndex: 0 },
+            { type: 'moveTarget', value: 2, actualIndex: 2, last: false },
+            { type: 'equal', value: 1, actualIndex: 1, expected: 1, expectedIndex: 2 },
+            { type: 'moveSource', value: 2, actualIndex: 2 },
+            { type: 'equal', value: 3, actualIndex: 3, expected: 3, expectedIndex: 3, last: true }
         ]);
     });
 
