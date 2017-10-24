@@ -241,70 +241,98 @@ describe('array-changes', function () {
         });
     });
 
-    it('should diff arrays that have non-numerical property names', function () {
-        var a = [1, 2, 3];
-        a.foo = 123;
-        a.bar = 456;
-        a.quux = {};
-
-        var b = [1, 2, 3];
-        b.bar = 456;
-        b.baz = 789;
-        b.quux = false;
-        expect(arrayChanges(a, b, function (a, b) {
+    it('falls back to item by item diffing if that results in less conflicts', function () {
+        expect(arrayChanges([1, 2, 5], [1, 3, 4], function (a, b) {
             return a === b;
-        }, function (a, b) {
-            return a === b;
-        }, true), 'to equal', [
+        }), 'to equal', [
             { type: 'equal', value: 1, expected: 1, actualIndex: 0, expectedIndex: 0 },
-            { type: 'equal', value: 2, expected: 2, actualIndex: 1, expectedIndex: 1 },
-            { type: 'equal', value: 3, expected: 3, actualIndex: 2, expectedIndex: 2 },
-            { type: 'remove', value: 123, actualIndex: 'foo' },
-            { type: 'equal', value: 456, expected: 456, actualIndex: 'bar', expectedIndex: 'bar' },
-            { type: 'similar', value: {}, expected: false, actualIndex: 'quux', expectedIndex: 'quux' },
-            { type: 'insert', value: 789, expectedIndex: 'baz', last: true }
+            { type: 'similar', value: 2, expected: 3, actualIndex: 1, expectedIndex: 1 },
+            { type: 'similar', value: 5, expected: 4, actualIndex: 2, expectedIndex: 2, last: true }
         ]);
     });
 
-    it('should support an array of specific non-numerical keys to diff', function () {
-        var a = [1];
-        a.foo = 123;
-        a.bar = 789;
-
-        var b = [1];
-        a.foo = 456;
-        a.bar = false;
-        expect(arrayChanges(a, b, function (a, b) {
-            return a === b;
-        }, function (a, b) {
-            return a === b;
-        }, [ 'foo' ]), 'to equal', [
-            { type: 'equal', value: 1, expected: 1, actualIndex: 0, expectedIndex: 0 },
-            { type: 'remove', actualIndex: 'foo', value: 456, last: true }
-        ]);
+    describe('when item by item diff is disabled', function () {
+        it('does not use the item by item diff even if that would result in less conflicts', function () {
+            expect(arrayChanges([1, 2, 5], [1, 3, 4], function (a, b) {
+                return a === b;
+            }, function () {
+                return false;
+            }, { fallbackToItemByItemDiff: false }), 'to equal', [
+                { type: 'equal', value: 1, actualIndex: 0, expected: 1, expectedIndex: 0 },
+                { type: 'insert', value: 3, expectedIndex: 1 },
+                { type: 'insert', value: 4, expectedIndex: 1 },
+                { type: 'remove', value: 2, actualIndex: 1 },
+                { type: 'remove', value: 5, actualIndex: 2, last: true }
+            ]);
+        });
     });
 
-    if (typeof Symbol !== 'undefined') {
-        it('should diff arrays that have Symbol property names', function () {
-            var aSymbol = Symbol('a');
-            var bSymbol = Symbol('b');
-            var a = [1, 2];
-            a[aSymbol] = 123;
+    describe('when including non-numerical properties', function () {
+        it('should diff arrays that have non-numerical property names', function () {
+            var a = [1, 2, 3];
+            a.foo = 123;
+            a.bar = 456;
+            a.quux = {};
 
-            var b = [1, 2];
-            b[bSymbol] = 456;
+            var b = [1, 2, 3];
+            b.bar = 456;
+            b.baz = 789;
+            b.quux = false;
             expect(arrayChanges(a, b, function (a, b) {
                 return a === b;
             }, function (a, b) {
                 return a === b;
-            }, true), 'to equal', [
+            }, { includeNonNumericalProperties: true }), 'to equal', [
                 { type: 'equal', value: 1, expected: 1, actualIndex: 0, expectedIndex: 0 },
                 { type: 'equal', value: 2, expected: 2, actualIndex: 1, expectedIndex: 1 },
-                { type: 'remove', value: 123, actualIndex: aSymbol },
-                { type: 'insert', value: 456, expectedIndex: bSymbol, last: true }
+                { type: 'equal', value: 3, expected: 3, actualIndex: 2, expectedIndex: 2 },
+                { type: 'remove', value: 123, actualIndex: 'foo' },
+                { type: 'equal', value: 456, expected: 456, actualIndex: 'bar', expectedIndex: 'bar' },
+                { type: 'similar', value: {}, expected: false, actualIndex: 'quux', expectedIndex: 'quux' },
+                { type: 'insert', value: 789, expectedIndex: 'baz', last: true }
             ]);
         });
-    }
+
+        it('should support an array of specific non-numerical keys to diff', function () {
+            var a = [1];
+            a.foo = 123;
+            a.bar = 789;
+
+            var b = [1];
+            a.foo = 456;
+            a.bar = false;
+            expect(arrayChanges(a, b, function (a, b) {
+                return a === b;
+            }, function (a, b) {
+                return a === b;
+            }, { includeNonNumericalProperties: [ 'foo' ] }), 'to equal', [
+                { type: 'equal', value: 1, expected: 1, actualIndex: 0, expectedIndex: 0 },
+                { type: 'remove', actualIndex: 'foo', value: 456, last: true }
+            ]);
+        });
+
+        if (typeof Symbol !== 'undefined') {
+            it('should diff arrays that have Symbol property names', function () {
+                var aSymbol = Symbol('a');
+                var bSymbol = Symbol('b');
+                var a = [1, 2];
+                a[aSymbol] = 123;
+
+                var b = [1, 2];
+                b[bSymbol] = 456;
+                expect(arrayChanges(a, b, function (a, b) {
+                    return a === b;
+                }, function (a, b) {
+                    return a === b;
+                }, { includeNonNumericalProperties: true }), 'to equal', [
+                    { type: 'equal', value: 1, expected: 1, actualIndex: 0, expectedIndex: 0 },
+                    { type: 'equal', value: 2, expected: 2, actualIndex: 1, expectedIndex: 1 },
+                    { type: 'remove', value: 123, actualIndex: aSymbol },
+                    { type: 'insert', value: 456, expectedIndex: bSymbol, last: true }
+                ]);
+            });
+        }
+    });
 
     it('produces a valid plan', function () {
         this.timeout(20000);
