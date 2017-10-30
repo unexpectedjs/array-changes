@@ -288,6 +288,43 @@ describe('array-changes', function () {
             }), 'to equal', []);
         });
 
+        it('returns an empty change-list with undefined keys on both the LHS and RHS', function () {
+            var a = [];
+            a.nothing = undefined;
+            var b = [];
+            b.nothing = undefined;
+
+            expect(arrayChanges(a, b, undefined, false, {
+                includeNonNumericalProperties: true
+            }), 'to equal', []);
+        });
+
+        it('returns a change-list containing remove when a LHS key is undefined on the RHS', function () {
+            var a = [];
+            a.nothing = true;
+            var b = [];
+            b.nothing = undefined;
+
+            expect(arrayChanges(a, b, undefined, false, {
+                includeNonNumericalProperties: true
+            }), 'to equal', [
+                { type: 'remove', actualIndex: 'nothing', value: true, expected: undefined, last: true }
+            ]);
+        });
+
+        it('returns a change-list containing similar when a RHS key is undefined on the LHS', function () {
+            var a = [];
+            a.nothing = undefined;
+            var b = [];
+            b.nothing = true;
+
+            expect(arrayChanges(a, b, undefined, false, {
+                includeNonNumericalProperties: true
+            }), 'to equal', [
+                { type: 'similar', expectedIndex: 'nothing', actualIndex: 'nothing', value: undefined, expected: true, last: true }
+            ]);
+        });
+
         it('should diff arrays that have non-numerical property names', function () {
             var a = [1, 2, 3];
             a.foo = 123;
