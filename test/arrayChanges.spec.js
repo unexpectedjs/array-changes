@@ -268,6 +268,26 @@ describe('array-changes', function () {
     });
 
     describe('when including non-numerical properties', function () {
+        it('returns an empty change-list with an undefined key on the LHS', function () {
+            var a = [];
+            a.nothing = undefined;
+            var b = [];
+
+            expect(arrayChanges(a, b, undefined, false, {
+                includeNonNumericalProperties: true
+            }), 'to equal', []);
+        });
+
+        it('returns an empty change-list with an undefined key on the RHS', function () {
+            var a = [];
+            var b = [];
+            b.nothing = undefined;
+
+            expect(arrayChanges(a, b, undefined, false, {
+                includeNonNumericalProperties: true
+            }), 'to equal', []);
+        });
+
         it('should diff arrays that have non-numerical property names', function () {
             var a = [1, 2, 3];
             a.foo = 123;
