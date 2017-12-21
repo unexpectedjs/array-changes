@@ -267,6 +267,18 @@ describe('array-changes', function () {
         });
     });
 
+    it('should prefer moves over 2 * structural similarity', function () {
+        expect(arrayChanges([{foo: 123}, {foo: 456}], [{foo: 456}, {foo: 123}], function (a, b) {
+            return a.foo === b.foo;
+        }, function () {
+            return true;
+        }), 'to equal', [
+            { type: 'moveTarget', value: { foo: 456 }, actualIndex: 1, last: false },
+            { type: 'equal', value: { foo: 123 }, actualIndex: 0, expected: { foo: 123 }, expectedIndex: 1 },
+            { type: 'moveSource', value: { foo: 456 }, actualIndex: 1, last: true }
+        ]);
+    });
+
     describe('when including non-numerical properties', function () {
         it('returns an empty change-list with an undefined key on the LHS', function () {
             var a = [];
