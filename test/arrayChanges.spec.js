@@ -109,7 +109,7 @@ describe('array-changes', function () {
         expect(arrayChanges([1, 2, 3, 0], [0, 1, 2, 3], function (a, b) {
             return a === b;
         }), 'to equal', [
-            { type: 'moveTarget', value: 0, actualIndex: 3, last: false },
+            { type: 'moveTarget', value: 0, actualIndex: 3, expected: 0, expectedIndex: 0, equal: true, last: false },
             { type: 'equal', value: 1, actualIndex: 0, expected: 1, expectedIndex: 1 },
             { type: 'equal', value: 2, actualIndex: 1, expected: 2, expectedIndex: 2 },
             { type: 'equal', value: 3, actualIndex: 2, expected: 3, expectedIndex: 3 },
@@ -122,7 +122,7 @@ describe('array-changes', function () {
             return a === b;
         }), 'to equal', [
             { type: 'equal', value: 0, actualIndex: 0, expected: 0, expectedIndex: 0 },
-            { type: 'moveTarget', value: 2, actualIndex: 2, last: false },
+            { type: 'moveTarget', value: 2, actualIndex: 2, expected: 2, expectedIndex: 1, equal: true, last: false },
             { type: 'equal', value: 1, actualIndex: 1, expected: 1, expectedIndex: 2 },
             { type: 'moveSource', value: 2, actualIndex: 2, expected: 2, expectedIndex: 1, equal: true },
             { type: 'equal', value: 3, actualIndex: 3, expected: 3, expectedIndex: 3, last: true }
@@ -445,7 +445,15 @@ describe('array-changes', function () {
         }, function (a, b) {
             return a.kind === b.kind;
         }), 'to equal', [
-            { type: 'moveTarget', value: { kind: 1, type: 'tag', name: 'p', children: [{ data: 'Hello world 2023', type: 'text' }], attribs: {} }, actualIndex: 1, last: false },
+            {
+                type: 'moveTarget',
+                value: { kind: 1, type: 'tag', name: 'p', children: [{ data: 'Hello world 2023', type: 'text' }], attribs: {} },
+                expected: { kind: 1, type: 'tag', name: 'p', children: [{ data: 'Hello world 2025', type: 'text' }], attribs: {} },
+                actualIndex: 1,
+                expectedIndex: 0,
+                equal: false,
+                last: false
+            },
             {
                 type: 'equal',
                 value: { kind: 0, type: 'tag', name: 'p', children: [{ data: 'A', type: 'text' }], attribs: {} },
