@@ -27,7 +27,6 @@ describe('arraydiff', function () {
         var out = before.slice();
         for (var i = 0; i < diff.length; i++) {
             var item = diff[i];
-            // console.log 'applying:', out, item
             if (item.type === 'insert') {
                 insert(out, item.index, item.values);
             } else if (item.type === 'remove') {
