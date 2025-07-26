@@ -491,4 +491,23 @@ describe('array-changes', function () {
             { type: 'moveSource', value: 'c', actualIndex: 2, expected: 'c', expectedIndex: 0, id: 1, equal: true, last: true }
         ]);
     });
+
+    it("handles moves with a mix of equal and similar items", function () {
+        var a = ['aaa', 'bbb', 'ccc', 'dddd'];
+        var b = ['ddd', 'ccc', 'bbb', 'aaa'];
+
+        expect(arrayChanges(a, b, function (a, b) {
+            return expect.equal(a, b);
+        }, function (a, b) {
+            return expect.equal(a.slice(0, 3), b.slice(0, 3));
+        }), 'to equal', [
+            { type: 'moveTarget', value: 'dddd', actualIndex: 3, id: 2, last: false, expected: 'ddd', expectedIndex: 0, equal: false },
+            { type: 'moveTarget', value: 'ccc', actualIndex: 2, id: 1, last: false, expected: 'ccc', expectedIndex: 1, equal: true },
+            { type: 'moveTarget', value: 'bbb', actualIndex: 1, id: 0, last: false, expected: 'bbb', expectedIndex: 2, equal: true },
+            { type: 'equal', value: 'aaa', actualIndex: 0, expected: 'aaa', expectedIndex: 3 },
+            { type: 'moveSource', value: 'bbb', actualIndex: 1, id: 0, expected: 'bbb', expectedIndex: 2, equal: true },
+            { type: 'moveSource', value: 'ccc', actualIndex: 2, id: 1, expected: 'ccc', expectedIndex: 1, equal: true },
+            { type: 'moveSource', value: 'dddd', actualIndex: 3, id: 2, expected: 'ddd', expectedIndex: 0, equal: false, last: true }
+        ]);
+    });
 });
