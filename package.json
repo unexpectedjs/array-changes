@@ -5,8 +5,8 @@
   "main": "./lib/arrayChanges.js",
   "scripts": {
     "lint": "eslint .",
-    "test": "mocha && npm run lint",
-    "travis": "npm test && npm run coverage && (<coverage/lcov.info coveralls || true)",
+    "test": "mocha",
+    "ci": "npm run lint && npm test && npm run coverage && (<coverage/lcov.info coveralls || true)",
     "coverage": "NODE_ENV=development istanbul cover _mocha -- --reporter dot && echo google-chrome coverage/lcov-report/index.html",
     "prepublish": "(echo '/*!' && <LICENSE sed -e's/^/ * /' | sed -e's/\\s+$//' && echo ' */' && browserify -p bundle-collapser/plugin -e lib/arrayChanges -s weknowhow.arrayChanges) > array-changes.js"
   },
