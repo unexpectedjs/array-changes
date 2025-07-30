@@ -1,7 +1,7 @@
 # array-changes
 
 [![NPM version](https://badge.fury.io/js/array-changes.svg)](http://badge.fury.io/js/array-changes)
-[![Build Status](https://travis-ci.org/unexpectedjs/array-changes.svg?branch=master)](https://travis-ci.org/unexpectedjs/array-changes)
+[![Build Status](https://github.com/unexpectedjs/array-changes/actions/workflows/ci.yml/badge.svg)](https://github.com/unexpectedjs/array-changes/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/unexpectedjs/array-changes/badge.svg)](https://coveralls.io/r/unexpectedjs/array-changes)
 
 A library for finding differences between two arrays.
