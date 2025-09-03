@@ -34,7 +34,7 @@
     "eslint": "2.13.1",
     "eslint-config-onelint": "1.2.0",
     "istanbul": "0.4.2",
-    "mocha": "2.3.4",
+    "mocha": "11.7.2",
     "sinon": "1.17.2",
     "unexpected": "10.36.2",
     "unexpected-check": "1.11.0",
